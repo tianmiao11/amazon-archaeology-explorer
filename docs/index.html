@@ -11,28 +11,38 @@
       position: absolute;
       top: 10px;
       right: 10px;
+      display: flex;
+      gap: 16px;
       background: white;
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(0,0,0,0.3);
-      max-width: 400px;
       z-index: 1000;
+      max-width: 700px;
+    }
+    .image-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .image-box img {
-      max-width: 100%;
-      margin-bottom: 10px;
-      display: block;
+      width: 256px;
+      height: 256px;
+      object-fit: contain;
+      border: 1px solid #ccc;
     }
-    .highlight-marker {
-      border: 3px solid red !important;
-      border-radius: 50%;
+    .meta-info {
+      font-size: 14px;
+      min-width: 180px;
     }
   </style>
 </head>
 <body>
   <div id="map"></div>
   <div class="info-box" id="info-box">
-    <strong>Click a red dot to view images</strong>
+    <div class="meta-info">
+      <strong>Click a red dot to view images</strong>
+    </div>
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -82,18 +92,18 @@
               const s2Url = `data/Sentinel-2/png/${id}.png`;
 
               const html = `
-                <div>
+                <div class="meta-info">
                   <strong>ID:</strong> ${id}<br>
                   <strong>Latitude:</strong> ${feature.geometry.coordinates[1]}<br>
                   <strong>Longitude:</strong> ${feature.geometry.coordinates[0]}<br>
                   <strong>DEM Score:</strong> ${props.prob_dem ?? 'N/A'}<br>
-                  <strong>Sentinel-2 Score:</strong> ${props.prob_s2 ?? 'N/A'}<br><br>
-                  <div class="image-box">
-                    <strong>DEM Patch</strong><br>
-                    <img src="${demUrl}" onerror="this.onerror=null;this.src='';this.alt='DEM image not found';"><br>
-                    <strong>Sentinel-2 Patch</strong><br>
-                    <img src="${s2Url}" onerror="this.onerror=null;this.src='';this.alt='S2 image not found';">
-                  </div>
+                  <strong>Sentinel-2 Score:</strong> ${props.prob_s2 ?? 'N/A'}<br>
+                </div>
+                <div class="image-box">
+                  <div><strong>DEM Patch</strong><br>
+                  <img src="${demUrl}" onerror="this.onerror=null;this.src='';this.alt='DEM image not found';"></div>
+                  <div><strong>Sentinel-2 Patch</strong><br>
+                  <img src="${s2Url}" onerror="this.onerror=null;this.src='';this.alt='S2 image not found';"></div>
                 </div>`;
 
               document.getElementById('info-box').innerHTML = html;
@@ -105,3 +115,4 @@
   </script>
 </body>
 </html>
+
