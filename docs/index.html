@@ -1,10 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <title>Amazon Archaeology Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 引入 Leaflet 样式和 JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; }
+    #map { height: 100%; width: 100%; }
+    .popup-img {
+      width: 240px;
+      margin-top: 5px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Hello, this is my visualization platform!</h1>
+  <div id="map"></div>
+
+  <script>
+    // 初始化地图
+    const map = L.map('map').setView([-5, -60], 5); // 中心点、缩放级别
+
+    // 加载底图
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 加载候选点数据
+    fetch('data/candidates.geojson')
+      .then(res => res.json())
+      .then(geojson => {
+        L.geoJSON(geojson, {
+          pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+              radius: 5,
+              color: 'red',
+              fillOpacity: 0.8
+            });
+          },
+          onEachFeature: function (feature, layer) {
+            const id = feature.properties.id;
+            const popupContent = `
+              <b>Point ID:</b> ${id}<br>
+              <b>DEM Prob:</b> ${feature.properties.prob_dem}<br>
+              <b>S2 Prob:</b> ${feature.properties.prob_s2}<br>
+              <img class="popup-img" src="data/NASADEM/png/${id}.png" alt="DEM"><br>
+              <img class="popup-img" src="data/Sentinel-2/png/${id}.png" alt="S2">
+            `;
+            layer.bindPopup(popupContent);
+          }
+        }).addTo(map);
+      });
+  </script>
 </body>
 </html>
+
