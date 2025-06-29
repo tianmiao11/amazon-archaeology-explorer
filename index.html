@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Amazon Archaeology Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+    .info-box {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 16px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+      z-index: 1000;
+      max-width: 700px;
+      overflow: auto;
+    }
+    .image-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .image-box img {
+      width: 256px;
+      height: 256px;
+      object-fit: contain;
+      border: 1px solid #ccc;
+    }
+    .meta-info {
+      font-size: 14px;
+      min-width: 180px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="info-box" id="info-box">
+    <div class="meta-info">
+      <strong>Click a red dot to view images</strong>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([-10, -60], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let activeMarker = null;
+
+    fetch('data/candidates.geojson')
+      .then(response => response.json())
+      .then(data => {
+        L.geoJSON(data, {
+          pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+              radius: 6,
+              fillColor: 'red',
+              color: '#900',
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 0.8
+            });
+          },
+          onEachFeature: function (feature, layer) {
+            const props = feature.properties;
+            const id = (props.NO || props.id || '').toString().padStart(6, '0');
+
+            layer.on('mouseover', function () {
+              layer.setStyle({ radius: 8, weight: 2, color: 'black' });
+            });
+            layer.on('mouseout', function () {
+              if (activeMarker !== layer) {
+                layer.setStyle({ radius: 6, weight: 1, color: '#900' });
+              }
+            });
+
+            layer.on('click', function () {
+              if (activeMarker) {
+                activeMarker.setStyle({ radius: 6, weight: 1, color: '#900' });
+              }
+              activeMarker = layer;
+              layer.setStyle({ radius: 10, weight: 3, color: 'gold' });
+
+              const demUrl = `data/NASADEM/png/${id}.png`;
+              const s2Url = `data/Sentinel-2/png/${id}.png`;
+
+              const html = `
+                <div class="meta-info">
+                  <strong>ID:</strong> ${id}<br>
+                  <strong>Latitude:</strong> ${feature.geometry.coordinates[1]}<br>
+                  <strong>Longitude:</strong> ${feature.geometry.coordinates[0]}<br>
+                  <strong>DEM Score:</strong> ${props.prob_dem ?? 'N/A'}<br>
+                  <strong>Sentinel-2 Score:</strong> ${props.prob_s2 ?? 'N/A'}<br>
+                </div>
+                <div class="image-box">
+                  <div><strong>DEM Patch</strong><br>
+                  <img src="${demUrl}" onerror="this.onerror=null;this.src='';this.alt='DEM image not found';"></div>
+                  <div><strong>Sentinel-2 Patch</strong><br>
+                  <img src="${s2Url}" onerror="this.onerror=null;this.src='';this.alt='S2 image not found';"></div>
+                </div>
+                <div class="meta-info" style="margin-top:10px;">
+                  <strong>📍 GPT-4o Archaeological Site Interpretation:</strong><br>
+                  <div style="max-height: 300px; overflow-y: auto; font-size: 13px; white-space: pre-line;">
+                    ${props.OpenAI_prompt ?? 'No analysis available.'}
+                  </div>
+                </div>`;
+
+              document.getElementById('info-box').innerHTML = html;
+              map.setView(layer.getLatLng(), 10);
+            });
+          }
+        }).addTo(map);
+      });
+  </script>
+</body>
+</html>
+
