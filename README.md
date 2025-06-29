@@ -1,3 +1,9 @@
+## 🎥 Project Overview Video
+
+We produced a short video introducing how deep learning and remote sensing can be used to identify lost archaeological sites in the Amazon rainforest.
+
+[![Watch the video](https://img.youtube.com/vi/evNM9eyw0-k/hqdefault.jpg)](https://www.youtube.com/watch?v=evNM9eyw0-k)
+
 ## Introduction
 The Amazon rain forest, covering more than 6 million kilometer square, was considered as an area with rare human activity in the Pre-Columbian era. But, more and more evidence indicated there were human civilizations nurtured in this land. However, the land is covered by high-density rain forest and it makes discovery of archaeological sites extremely difficult. Besides, since human-built structures in Pre-Columbian era were mostly built from organic materials and those structures have been rotten over the years, especially Amazon has one of the highest decomposition rates in the world[1], it makes Pre-Columbian human activity in Amazon rain forest even harder to detect. Fortunately, the recent advancement of technology on geo sensing and machine learning have potential to make the discovery much more efficient. And this write-up would focus on utilizing a deep learning approach on LiDAR data and satellite image to discover potential pre-columbian archaeological sites hidden under the dense canopy of the Amazon rain forest.
 
