@@ -15,177 +15,49 @@
   <style>
     body, html { margin: 0; padding: 0; }
     #map { height: 100vh; }
-
-    .sidebar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 250px;
-      height: 100%;
-      background: white;
-      border-right: 1px solid #ccc;
-      z-index: 1001;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-    }
-    .sidebar.collapsed {
-      transform: translateX(-100%);
-    }
-    .sidebar h3 {
-      margin: 10px;
-      font-size: 16px;
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0 10px 10px 10px;
-      margin: 0;
-    }
-    .sidebar ul li {
-      cursor: pointer;
-      padding: 6px 10px;
-      border-bottom: 1px solid #eee;
-    }
-    .sidebar ul li:hover {
-      background-color: #f0f0f0;
-    }
-    .toggle-button {
-      position: absolute;
-      top: 10px;
-      left: 260px;
-      z-index: 1002;
-      background: #fff;
-      border: 1px solid #ccc;
-      padding: 4px 10px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .info-box {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
-      z-index: 1000;
-      max-height: 90vh;
-      max-width: 800px;
-      overflow-y: auto;
-    }
-
+    .sidebar { position: absolute; top: 0; left: 0; width: 250px; height: 100%; background: white; border-right: 1px solid #ccc; z-index: 1001; transition: transform 0.3s ease; overflow-y: auto; }
+    .sidebar.collapsed { transform: translateX(-100%); }
+    .sidebar h3 { margin: 10px; font-size: 16px; }
+    .sidebar ul { list-style: none; padding: 0 10px 10px 10px; margin: 0; }
+    .sidebar ul li { cursor: pointer; padding: 6px 10px; border-bottom: 1px solid #eee; }
+    .sidebar ul li:hover { background-color: #f0f0f0; }
+    .toggle-button { position: absolute; top: 10px; left: 260px; z-index: 1002; background: #fff; border: 1px solid #ccc; padding: 4px 10px; cursor: pointer; border-radius: 4px; }
+    .info-box { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 16px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.3); z-index: 1000; max-height: 90vh; max-width: 800px; overflow-y: auto; }
     .meta-info { font-size: 14px; }
-
-    .image-box {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .image-box img {
-      width: 256px;
-      height: 256px;
-      object-fit: contain;
-      border: 1px solid #ccc;
-    }
-
-    model-viewer {
-      width: 256px;
-      height: 256px;
-      background: #f0f0f0;
-      border: 1px solid #ccc;
-    }
-
-    .model-controls button {
-      margin-right: 8px;
-      margin-top: 4px;
-      padding: 4px 10px;
-    }
-
-    .fullscreen-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 2000;
-      background: rgba(0,0,0,0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100vw;
-      height: 100vh;
-      flex-direction: column;
-    }
-
-    .fullscreen-overlay img,
-    .fullscreen-overlay model-viewer {
-      max-width: 90vw;
-      max-height: 90vh;
-      border: 1px solid #ccc;
-      background: white;
-    }
-
-    .close-button {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 20px;
-      background: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      z-index: 2100;
-    }
-
-    .zoom-container {
-      overflow: hidden;
-      position: relative;
-    }
-
-    .zoom-container img {
-      transform-origin: center center;
-      transition: transform 0.2s ease;
-    }
+    .image-box { display: flex; flex-wrap: wrap; gap: 10px; }
+    .image-box img { width: 256px; height: 256px; object-fit: contain; border: 1px solid #ccc; }
+    model-viewer { width: 256px; height: 256px; background: #f0f0f0; border: 1px solid #ccc; }
+    .model-controls button { margin-right: 8px; margin-top: 4px; padding: 4px 10px; }
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; z-index: 2000; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; flex-direction: column; }
+    .fullscreen-overlay img, .fullscreen-overlay model-viewer { max-width: 90vw; max-height: 90vh; border: 1px solid #ccc; background: white; }
+    .close-button { position: absolute; top: 20px; right: 30px; font-size: 20px; background: white; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; z-index: 2100; }
+    .zoom-container { overflow: hidden; position: relative; }
+    .zoom-container img { transform-origin: center center; transition: transform 0.2s ease; }
   </style>
 </head>
 <body>
-
   <div class="sidebar" id="sidebar">
     <h3>Candidate List</h3>
     <ul id="candidate-list"></ul>
   </div>
   <div class="toggle-button" onclick="toggleSidebar()">☰</div>
-
   <div id="map"></div>
-
   <div class="info-box" id="info-box">
     <div class="meta-info">
       <strong>Click a red dot to view images and 3D model</strong>
     </div>
   </div>
-
   <script>
     const map = L.map('map').setView([-10, -60], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map);
     let activeMarker = null;
-    let markerMap = {};
-    let featureMap = {};
-
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('collapsed');
-    }
-
+    let markerMap = {}; let featureMap = {};
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
     function switchModel(base, type) {
       const viewer = document.getElementById('model-viewer');
       if (!viewer) return;
       viewer.src = (type === 'tree') ? `${base}_with_tree.glb` : `${base}_terrain_only.glb`;
     }
-
     function expandImage(url, title) {
       const overlay = document.createElement('div');
       overlay.className = 'fullscreen-overlay';
@@ -196,8 +68,7 @@
           <div class="zoom-container" style="max-width: 90vw; max-height: 90vh;">
             <img src="${url}" alt="${title}" style="transform: scale(1); max-width: 100%; max-height: 100%;" />
           </div>
-        </div>
-      `;
+        </div>`;
       document.body.appendChild(overlay);
       const img = overlay.querySelector('img');
       let scale = 1;
@@ -208,41 +79,31 @@
         img.style.transform = `scale(${scale})`;
       }, { passive: false });
     }
-
     function expandModel(glbBase) {
       const overlay = document.createElement('div');
       overlay.className = 'fullscreen-overlay';
       overlay.innerHTML = `
         <button class="close-button" onclick="this.parentElement.remove()">✖</button>
         <model-viewer id="fullscreen-model-viewer"
-          src="${glbBase}_terrain_only.glb"
-          alt="3D model" auto-rotate camera-controls
-          style="width: 90vw; height: 80vh;">
-        </model-viewer>
+          src="${glbBase}_terrain_only.glb" alt="3D model" auto-rotate camera-controls
+          style="width: 90vw; height: 80vh;"></model-viewer>
         <div class="model-controls" style="margin-top: 10px;">
           <button onclick="document.getElementById('fullscreen-model-viewer').src='${glbBase}_terrain_only.glb'">Terrain Only</button>
           <button onclick="document.getElementById('fullscreen-model-viewer').src='${glbBase}_with_tree.glb'">With Tree</button>
-        </div>
-      `;
+        </div>`;
       document.body.appendChild(overlay);
     }
-
     function showFeature(feature, layer) {
       const props = feature.properties;
       const id = (props.NO || props.id || '').toString().padStart(6, '0');
       const demUrl = `data/NASADEM/png/${id}.png`;
       const s2Url = `data/Sentinel-2/png/${id}.png`;
       const glbBase = `data/Model/glb/${id}`;
-
-      if (activeMarker) {
-        activeMarker.setStyle({ radius: 6, weight: 1, color: '#900' });
-      }
+      if (activeMarker) activeMarker.setStyle({ radius: 6, weight: 1, color: '#900' });
       activeMarker = layer;
       if (layer) layer.setStyle({ radius: 10, weight: 3, color: 'gold' });
-
       const infoBox = document.getElementById('info-box');
       infoBox.innerHTML = '';
-
       const metaDiv = document.createElement('div');
       metaDiv.className = 'meta-info';
       metaDiv.innerHTML = `
@@ -250,88 +111,56 @@
         <strong>Latitude:</strong> ${feature.geometry.coordinates[1]}<br>
         <strong>Longitude:</strong> ${feature.geometry.coordinates[0]}<br>
         <strong>DEM Score:</strong> ${props.prob_dem ?? 'N/A'}<br>
-        <strong>Sentinel-2 Score:</strong> ${props.prob_s2 ?? 'N/A'}<br>
-      `;
+        <strong>Sentinel-2 Score:</strong> ${props.prob_s2 ?? 'N/A'}<br>`;
       infoBox.appendChild(metaDiv);
-
       const imageBox = document.createElement('div');
       imageBox.className = 'image-box';
       imageBox.innerHTML = `
-        <div>
-          <strong>DEM Patch</strong>
-          <button onclick="expandImage('${demUrl}', 'DEM Patch')">🔍</button><br>
-          <img src="${demUrl}" onerror="this.onerror=null;this.src='';this.alt='DEM image not found';">
-        </div>
-        <div>
-          <strong>Sentinel-2 Patch</strong>
-          <button onclick="expandImage('${s2Url}', 'Sentinel-2 Patch')">🔍</button><br>
-          <img src="${s2Url}" onerror="this.onerror=null;this.src='';this.alt='S2 image not found';">
-        </div>
-      `;
+        <div><strong>DEM Patch</strong>
+        <button onclick="expandImage('${demUrl}', 'DEM Patch')">🔍</button><br>
+        <img src="${demUrl}" onerror="this.onerror=null;this.src='';this.alt='DEM image not found';"></div>
+        <div><strong>Sentinel-2 Patch</strong>
+        <button onclick="expandImage('${s2Url}', 'Sentinel-2 Patch')">🔍</button><br>
+        <img src="${s2Url}" onerror="this.onerror=null;this.src='';this.alt='S2 image not found';"></div>`;
       infoBox.appendChild(imageBox);
-
       const modelBox = document.createElement('div');
       modelBox.className = 'model-box';
       modelBox.innerHTML = `
         <strong>3D View</strong>
         <button onclick="expandModel('${glbBase}')">🔍</button><br>
-        <model-viewer id="model-viewer"
-          src="${glbBase}_terrain_only.glb"
-          alt="3D terrain"
-          auto-rotate camera-controls
-          style="width: 256px; height: 256px; background: #f0f0f0; border: 1px solid #ccc;">
-        </model-viewer>
+        <model-viewer id="model-viewer" src="${glbBase}_terrain_only.glb"
+          alt="3D terrain" auto-rotate camera-controls
+          style="width: 256px; height: 256px; background: #f0f0f0; border: 1px solid #ccc;"></model-viewer>
         <div class="model-controls">
           <button onclick="switchModel('${glbBase}', 'terrain')">Terrain Only</button>
           <button onclick="switchModel('${glbBase}', 'tree')">With Tree</button>
-        </div>
-      `;
+        </div>`;
       infoBox.appendChild(modelBox);
-
-      const promptBox = document.createElement('div');
-      promptBox.className = 'meta-info';
-      promptBox.style.marginTop = '10px';
-      promptBox.innerHTML = `
-        <strong>📍 GPT-4o Archaeological Site Interpretation:</strong><br>
-        <div style="max-height: 300px; overflow-y: auto; font-size: 13px; white-space: pre-line;">
-          ${props.OpenAI_prompt ?? 'No analysis available.'}
-        </div>
-      `;
-      infoBox.appendChild(promptBox);
-
+      // ✅ 新增 GPT-4o 内容
+      const gptDiv = document.createElement('div');
+      gptDiv.innerHTML = `<hr><strong>📍 GPT-4o Archaeological Site Interpretation:</strong><br>
+        <div style="white-space: pre-wrap; font-size: 14px; line-height: 1.4;">
+          ${props.OpenAI_prompt?.trim() || '<em>No analysis available.</em>'}
+        </div>`;
+      infoBox.appendChild(gptDiv);
       map.setView([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], 10);
     }
-
-    fetch('data/candidates.geojson')
-      .then(res => res.json())
-      .then(data => {
-        const list = document.getElementById('candidate-list');
-
-        L.geoJSON(data, {
-          pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {
-              radius: 6,
-              fillColor: 'red',
-              color: '#900',
-              weight: 1,
-              opacity: 1,
-              fillOpacity: 0.8
-            });
-          },
-          onEachFeature: function (feature, layer) {
-            const id = (feature.properties.NO || feature.properties.id || '').toString().padStart(6, '0');
-            markerMap[id] = layer;
-            featureMap[id] = feature;
-
-            layer.on('click', () => showFeature(feature, layer));
-
-            const li = document.createElement('li');
-            li.textContent = `#${id}`;
-            li.onclick = () => showFeature(feature, layer);
-            list.appendChild(li);
-          }
-        }).addTo(map);
-      });
+    fetch('data/candidates.geojson').then(res => res.json()).then(data => {
+      const list = document.getElementById('candidate-list');
+      L.geoJSON(data, {
+        pointToLayer: (feature, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: 'red', color: '#900', weight: 1, opacity: 1, fillOpacity: 0.8 }),
+        onEachFeature: (feature, layer) => {
+          const id = (feature.properties.NO || feature.properties.id || '').toString().padStart(6, '0');
+          markerMap[id] = layer;
+          featureMap[id] = feature;
+          layer.on('click', () => showFeature(feature, layer));
+          const li = document.createElement('li');
+          li.textContent = `#${id}`;
+          li.onclick = () => showFeature(feature, layer);
+          list.appendChild(li);
+        }
+      }).addTo(map);
+    });
   </script>
 </body>
 </html>
