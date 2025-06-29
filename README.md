@@ -18,11 +18,11 @@ To prepare training data, both positive and negative samples are collected. 4067
 3. Utilizes a grid-based partitioning and stratified random sampling strategy to ensure balanced point coverage amount in Amazon Biome to prevent regional bias in model learning.
 
 
-![Figure 1: Location of all positive samples in the training data](../04_visuals/raw_data_positive.png)
+![](https://www.googleapis.com/download/storage/v1/b/kaggle-user-content/o/inbox%2F334124%2Fa450d3a909cbb94cfe8619d2eaae84a7%2Fraw_data_positive.png?generation=1751174416097228&alt=media)
 **Figure 1: Location of all positive samples in the training data**
 
 
-![](../04_visuals/raw_data_negative.png)
+![](https://www.googleapis.com/download/storage/v1/b/kaggle-user-content/o/inbox%2F334124%2F2e4fb8c246e696a6cf402a7856aed840%2Fraw_data_negative.png?generation=1751173030701061&alt=media)
 **Figure 2: Location of all negative samples in the training data**
  
 | Number | Article Title | Sample Number |
