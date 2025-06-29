@@ -1,7 +1,6 @@
 ## 🎥 Project Overview Video
 
-We produced a short video introducing how deep learning and remote sensing can be used to identify lost archaeological sites in the Amazon rainforest.
-
+Amazon Archeological Site Discovery – A Deep Learning Approach
 [![Watch the video](https://img.youtube.com/vi/evNM9eyw0-k/hqdefault.jpg)](https://www.youtube.com/watch?v=evNM9eyw0-k)
 
 ## Introduction
