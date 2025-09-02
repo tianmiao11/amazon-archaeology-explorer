@@ -177,3 +177,7 @@ Due to time constraints of the competition, we managed to complete a basic deep 
 
 
 [10] Prümers, H., Robinson, M., Mologni, F., et al. (2022). Lidar reveals pre-Hispanic low-density urbanism in the Bolivian Amazon. Nature, 606(7912), 325–328. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9177426
+
+## License
+
+This project is licensed under the [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
