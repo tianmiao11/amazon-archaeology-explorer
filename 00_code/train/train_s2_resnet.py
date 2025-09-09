@@ -23,6 +23,35 @@ negative_masked = Path('./01_samples/tif/s2_masked/negative')
 pos_files = [f for f in pos_path.glob("**/*") if f.is_file()]
 neg_files = [f for f in neg_path.glob("**/*") if f.is_file()]
 
+def get_file_masked_tuple(files, label):
+    result = []
+    for path in files:
+        result.append((path.resolve(), label))
+    
+    return result
+
+class SentinelDataset(Dataset):
+    def __init__(self, pos_files, neg_files, transform):
+        self.data = []
+        self.data += get_file_masked_tuple(pos_files, 1)
+        self.data += get_file_masked_tuple(neg_files, 0)
+
+        self.transform = transform
+        random.shuffle(self.data)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        # print(self.data[idx])
+        file_path, label = self.data[idx]
+        
+        with rasterio.open(file_path) as dataset:
+            image_array = dataset.read()
+            image_tensor = torch.from_numpy(image_array)
+
+            return (self.transform(image_tensor).float(), label)
+        
 # Initialize dataset
 dataset = SentinelDataset(
     pos_files=pos_files,
